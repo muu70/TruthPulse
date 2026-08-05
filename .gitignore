@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Xcode — ユーザー固有の状態（共有すると衝突するので除外）
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+
+# 共有スキームは残す（TruthPulse.xcodeproj/xcshareddata/xcschemes/ は追跡する）
+
+# ビルド成果物
+build/
+DerivedData/
+*.o
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.app
+*.xcarchive
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+# CocoaPods / Carthage（現在は未使用）
+Pods/
+Carthage/Build/
+
+# その他
+*.log
+*.tmp
