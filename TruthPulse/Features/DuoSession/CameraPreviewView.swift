@@ -24,6 +24,14 @@ struct CameraPreviewView: UIViewRepresentable {
         }
     }
 
+    /// NOTE: プレビューレイヤーの connection には **何も設定しません**。
+    ///
+    /// AVCaptureVideoPreviewLayer は既定で
+    ///   - 画面の向きに合わせて自動で回転する
+    ///   - インカメなら自動で鏡像にする
+    /// ため、こちらで videoRotationAngle を足すと二重に回って映像が倒れます。
+    ///
+    /// 解析側（FaceTrackingService）を、この既定の見え方に合わせています。
     final class PreviewUIView: UIView {
         override static var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
 

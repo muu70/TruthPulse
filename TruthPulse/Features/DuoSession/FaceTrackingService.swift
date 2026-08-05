@@ -204,14 +204,12 @@ private final class CameraController: NSObject, @unchecked Sendable {
         output.setSampleBufferDelegate(self, queue: queue)
         if session.canAddOutput(output) { session.addOutput(output) }
 
-        if let connection = output.connection(with: .video) {
-            if connection.isVideoRotationAngleSupported(90) {
-                connection.videoRotationAngle = 90   // ポートレート
-            }
-            if connection.isVideoMirroringSupported {
-                connection.isVideoMirrored = true    // インカメは鏡像
-            }
-        }
+        // NOTE: connection には回転も鏡像も設定しません。
+        //
+        // AVCaptureVideoDataOutput の videoRotationAngle は、環境によって
+        // バッファに反映されないことがあります（実機で 1920x1080 のまま届きました）。
+        // 効くかどうかに依存する設計は壊れやすいので、バッファは素のまま受け取り、
+        // 向きの解釈は Vision 側（CGImagePropertyOrientation）に一本化します。
 
         session.commitConfiguration()
     }
@@ -232,12 +230,16 @@ extension CameraController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let request = VNDetectFaceRectanglesRequest()
         request.revision = VNDetectFaceRectanglesRequestRevision3
 
-        let bufferSize = CGSize(
-            width: CVPixelBufferGetWidth(pixelBuffer),
-            height: CVPixelBufferGetHeight(pixelBuffer)
-        )
+        // バッファは素の向き（インカメは横長・非鏡像）で届く。
+        let rawWidth = CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+        let rawHeight = CGFloat(CVPixelBufferGetHeight(pixelBuffer))
 
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .up)
+        // .leftMirrored を渡すと、Vision は「ポートレートに立てて左右反転した状態」
+        // として解釈する。これはプレビューレイヤーが既定で見せている向きと一致する。
+        // その空間では幅と高さが入れ替わる。
+        let bufferSize = CGSize(width: rawHeight, height: rawWidth)
+
+        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .leftMirrored)
         try? handler.perform([request])
 
         let observations = (request.results ?? [])
