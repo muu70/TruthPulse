@@ -157,7 +157,27 @@ RootView (NavigationStack, path: [TPRoute])
 
 - ダッシュボード（時間帯別グラフつき。`SessionHistoryView` を置き換える想定）
 - Dynamic Island（ActivityKit）とウィジェット（WidgetKit）
-- アプリアイコン
+
+---
+
+## App Store 提出
+
+手順と掲載文は [RELEASE.md](RELEASE.md)。
+
+**審査で最も注意すべきはガイドライン 1.1.6（偽の機能）です。**
+「エンタメ目的と書けば免除される」とは明記されていないため、
+初回起動時に `WelcomeSheet` で「これはパーティーゲームです」を全画面表示しています。
+**この画面を消さないでください。** 2 回目以降は出さない実装なので、
+プレイ体験は損なわれません。
+
+説明文やスクリーンショットで「AI」「解析」「測定」を機能として謳うのも避けます。
+
+アイコンと効果音は生成物です。手で編集せず、スクリプトを直して再実行してください。
+
+```bash
+python3 tools/generate_icon.py    # アプリアイコン
+python3 tools/generate_sounds.py  # 効果音
+```
 
 ---
 

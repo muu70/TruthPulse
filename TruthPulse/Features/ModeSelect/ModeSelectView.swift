@@ -28,6 +28,10 @@ struct ModeSelectView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
 
+    /// 初回だけ案内を出す。2 回目以降は「本物の機械っぽさ」を優先して出さない。
+    @AppStorage("tp.hasSeenWelcome") private var hasSeenWelcome = false
+    @State private var isShowingWelcome = false
+
     var body: some View {
         ZStack {
             TPColor.backdrop
@@ -58,6 +62,15 @@ struct ModeSelectView: View {
         .onChange(of: selectedMode) { _, _ in
             TPHaptics.select()
             TPAudio.shared.play(.select, volume: 0.6)
+        }
+        .task {
+            if !hasSeenWelcome { isShowingWelcome = true }
+        }
+        .fullScreenCover(isPresented: $isShowingWelcome) {
+            WelcomeSheet {
+                hasSeenWelcome = true
+                isShowingWelcome = false
+            }
         }
     }
 
