@@ -21,8 +21,9 @@ struct DuoSessionView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @FocusState private var questionFocused: Bool
 
+    /// 保存済みセッション。セットされると結果画面がせり上がり、
+    /// 閉じられると nil に戻る（＝そのまま次の計測を始める合図）。
     @State private var completedSession: ScanSession?
-    @State private var isShowingResult = false
 
     var body: some View {
         content
@@ -32,9 +33,13 @@ struct DuoSessionView: View {
             .onChange(of: viewModel.phase) { _, newPhase in
                 handlePhaseChange(newPhase)
             }
-            .fullScreenCover(isPresented: $isShowingResult) { resultCover }
+            .onChange(of: completedSession) { _, session in
+                handleResultDismissed(session)
+            }
+            .fullScreenCover(item: $completedSession) { session in
+                ResultView(session: session, onRetry: {})
+            }
             .onDisappear { viewModel.stopCamera() }
-            .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: viewModel.phase)
     }
 
     private var content: some View {
@@ -49,21 +54,22 @@ struct DuoSessionView: View {
                 bottomGuide
             }
         }
-    }
-
-    @ViewBuilder
-    private var resultCover: some View {
-        if let completedSession {
-            ResultView(session: completedSession) {
-                Task { await viewModel.rescan() }
-            }
-        }
+        // NOTE: アニメーションは content にだけ掛ける。
+        // body 直下に置くと fullScreenCover の表示状態まで暗黙アニメーションの
+        // 対象になり、提示が取りこぼされることがあります。
+        .animation(reduceMotion ? nil : .snappy(duration: 0.3), value: viewModel.phase)
     }
 
     private func handlePhaseChange(_ newPhase: DuoSessionViewModel.Phase) {
         guard newPhase == .result else { return }
         completedSession = viewModel.persist(in: modelContext)
-        isShowingResult = completedSession != nil
+    }
+
+    /// 結果画面が閉じられたら、そのまま次の計測に戻る。
+    /// 「もう一問」も「閉じる」も同じ挙動でよい（パーティーで連続して回すため）。
+    private func handleResultDismissed(_ session: ScanSession?) {
+        guard session == nil, viewModel.phase == .result else { return }
+        Task { await viewModel.rescan() }
     }
 
     // MARK: - Camera

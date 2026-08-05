@@ -314,7 +314,12 @@ final class DuoSessionViewModel {
             factors: synthesized.factors
         )
         phase = .result
-        stopCamera()
+
+        // NOTE: ここでカメラを止めないこと。
+        // 止めるとプレビューが黒く抜け、結果画面が出るまでの数フレームと、
+        // 結果画面を閉じたあとが真っ黒になります。
+        // 実際の停止は View の onDisappear（画面を離れるとき）に任せます。
+        // 計測ループは runLoop 側が phase == .result で自動的に抜けます。
 
         if Verdict(score: synthesized.score) == .truthful {
             TPHaptics.success()
