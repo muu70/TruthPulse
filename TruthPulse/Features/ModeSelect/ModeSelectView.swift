@@ -34,8 +34,11 @@ struct ModeSelectView: View {
 
             ScrollView {
                 VStack(spacing: 0) {
+                    SoundSettingsBar()
+                        .padding(.top, 6)
+
                     brandmark
-                        .padding(.top, typeSize.isAccessibilitySize ? 8 : 16)
+                        .padding(.top, typeSize.isAccessibilitySize ? 4 : 10)
                         .padding(.bottom, 26)
 
                     modeCards
@@ -52,7 +55,10 @@ struct ModeSelectView: View {
         }
         .preferredColorScheme(.dark)
         .toolbarVisibility(.hidden, for: .navigationBar)
-        .onChange(of: selectedMode) { _, _ in TPHaptics.select() }
+        .onChange(of: selectedMode) { _, _ in
+            TPHaptics.select()
+            TPAudio.shared.play(.select, volume: 0.6)
+        }
     }
 
     // MARK: - Brandmark

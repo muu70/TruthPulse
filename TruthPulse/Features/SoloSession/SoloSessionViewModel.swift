@@ -104,6 +104,7 @@ final class SoloSessionViewModel {
             interruptionTask?.cancel()
             interruptionTask = nil
             phase = .sampling
+            TPAudio.shared.startLoop(.scan, volume: 0.55)
         default:
             break
         }
@@ -126,6 +127,8 @@ final class SoloSessionViewModel {
         liftCount += 1
         phase = .interrupted
         TPHaptics.warning()
+        TPAudio.shared.stop(.scan)
+        TPAudio.shared.play(.alert)
         interruptionTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(3))
             guard !Task.isCancelled else { return }
@@ -134,6 +137,7 @@ final class SoloSessionViewModel {
     }
 
     func abort() {
+        TPAudio.shared.stopLoops()
         samplingTask?.cancel()
         interruptionTask?.cancel()
         reset()
@@ -141,6 +145,7 @@ final class SoloSessionViewModel {
     }
 
     func resetToIdle() {
+        TPAudio.shared.stopAll()
         samplingTask?.cancel()
         interruptionTask?.cancel()
         reset()
@@ -151,6 +156,8 @@ final class SoloSessionViewModel {
 
     private func startSampling() {
         TPHaptics.prepare()
+        TPAudio.shared.play(.start)
+        TPAudio.shared.startLoop(.scan, volume: 0.55)
         phase = .sampling
         samplingTask = Task { [weak self] in
             await self?.runSamplingLoop()
@@ -212,12 +219,16 @@ final class SoloSessionViewModel {
             lastBeatIndex = beatIndex
             heartbeatTick &+= 1
             TPHaptics.heartbeat()
+            TPAudio.shared.play(.heartbeat, volume: 0.7)
         }
     }
 
     private func finish() async {
         phase = .analyzing
+        TPAudio.shared.stop(.scan)
+        TPAudio.shared.startLoop(.analyzing, volume: 0.6)
         try? await Task.sleep(for: .milliseconds(1_400))
+        TPAudio.shared.stop(.analyzing)
 
         let synthesized = BioSignalEngine.synthesize(
             question: question,
@@ -234,8 +245,10 @@ final class SoloSessionViewModel {
 
         if Verdict(score: synthesized.score) == .truthful {
             TPHaptics.success()
+            TPAudio.shared.play(.truth)
         } else {
             TPHaptics.warning()
+            TPAudio.shared.play(.lie)
         }
     }
 
