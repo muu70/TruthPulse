@@ -21,6 +21,24 @@ enum ScanMode: String, Codable, CaseIterable, Sendable {
         case .pair: "ペア・スキャン"
         }
     }
+
+    /// ダッシュボードのチップなど、狭い横幅で使う短縮名。
+    var shortDisplayName: String {
+        switch self {
+        case .solo: "ソロ"
+        case .duo: "デュオ"
+        case .pair: "ペア"
+        }
+    }
+
+    /// モード選択画面のアイコンと揃えている。
+    var symbolName: String {
+        switch self {
+        case .solo: "person.fill"
+        case .duo: "person.2.fill"
+        case .pair: "hand.point.up.left.fill"
+        }
+    }
 }
 
 /// 判定は「本当」か「嘘」の 2 値。
