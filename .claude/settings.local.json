@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git push *)",
       "Bash(git fetch *)",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(git -C /Users/muno/Desktop/ws/claude/lie_checker status --short)"
     ]
   }
 }
