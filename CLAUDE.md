@@ -167,10 +167,18 @@ RootView (NavigationStack, path: [TPRoute])
 
 ---
 
-## 未実装
+## 残りのタスク
 
-- ダッシュボード（時間帯別グラフつき。`SessionHistoryView` を置き換える想定）
-- Dynamic Island（ActivityKit）とウィジェット（WidgetKit）
+**着手前に [BACKLOG.md](BACKLOG.md) を読んでください。**
+各タスクの受け入れ条件と、踏んではいけない地雷が書いてあります。
+
+優先度順の概要:
+
+1. ダッシュボード（`SessionHistoryView` を置き換え）
+2. 合コンモード（トーナメント・お題デッキ・罰ゲーム）※課金なしで先に作る
+3. 一斉スキャン（4 人まで同時に指を置く）
+4. アプリ内課金 ¥500（StoreKit 2）※ 2 が成立してから
+5. Dynamic Island / ウィジェット
 
 ---
 
