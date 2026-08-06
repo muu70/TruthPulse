@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TruthPulse — 合コンモード（¥500）UIモック</title>
+<style>
+:root{
+  --void:#05060F; --deep:#0A0D1E;
+  --panel:rgba(255,255,255,.055); --stroke:rgba(255,255,255,.12);
+  --cyan:#34E5FF; --blue:#2E7BFF; --purple:#7B4DFF;
+  --deceit:#FF3D9A; --deceitT:#FF8FC2;
+  --truth:#29F2A0; --truthT:#7CFFCB; --amber:#FFB020;
+  --t1:#F2F6FF; --t2:#A8B2D1; --t3:#8290B5;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{
+  background:
+    radial-gradient(1200px 700px at 15% -5%, rgba(46,123,255,.20), transparent 60%),
+    radial-gradient(1000px 700px at 90% 10%, rgba(123,77,255,.18), transparent 60%),
+    var(--void);
+  color:var(--t1);
+  font-family:-apple-system,"SF Pro Display","Hiragino Sans",sans-serif;
+  line-height:1.6; padding:56px 24px 96px;
+}
+.wrap{max-width:1340px;margin:0 auto}
+.eyebrow{display:inline-flex;gap:8px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--amber);border:1px solid rgba(255,176,32,.4);padding:7px 14px;border-radius:999px;
+  background:rgba(255,176,32,.08)}
+h1{font-size:42px;font-weight:700;letter-spacing:-.03em;margin:20px 0 14px;
+  background:linear-gradient(100deg,#fff 10%,var(--amber) 50%,var(--deceit) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--t2);font-size:15px;max-width:800px;line-height:1.85}
+.lead b{color:var(--t1)}
+
+.sec{display:flex;align-items:baseline;gap:14px;margin:60px 0 6px}
+.sec .n{font-family:"SF Mono",ui-monospace,monospace;font-size:13px;color:var(--amber);letter-spacing:.1em}
+.sec h2{font-size:22px;font-weight:600}
+.sec .d{color:var(--t3);font-size:13px}
+.note{color:var(--t3);font-size:13px;margin-bottom:24px;max-width:840px;line-height:1.85}
+.note b{color:var(--t2)}
+
+.grid{display:flex;flex-wrap:wrap;gap:44px;align-items:flex-start;margin-bottom:20px}
+.dev{width:320px}
+.frame{position:relative;width:320px;height:680px;border-radius:50px;
+  background:linear-gradient(160deg,#2b3050,#0b0d18 40%);padding:10px;
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.18)}
+.screen{position:relative;width:100%;height:100%;border-radius:41px;overflow:hidden;
+  background:radial-gradient(520px 340px at 50% -8%, rgba(46,123,255,.26), transparent 65%),
+             radial-gradient(420px 380px at 100% 100%, rgba(123,77,255,.20), transparent 70%),var(--deep);
+  display:flex;flex-direction:column}
+.screen::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.45;
+  background-image:linear-gradient(rgba(52,229,255,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(52,229,255,.04) 1px,transparent 1px);
+  background-size:26px 26px}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:102px;height:29px;border-radius:999px;background:#000;z-index:9}
+.status{display:flex;justify-content:space-between;padding:14px 24px 0;font-size:11.5px;font-weight:600;z-index:8}
+.body{flex:1;padding:18px 18px 0;position:relative;z-index:5;overflow:hidden}
+.homebar{width:116px;height:5px;border-radius:999px;background:rgba(255,255,255,.28);margin:0 auto 9px}
+.cap{margin-top:16px}
+.cap b{display:block;font-size:14.5px;font-weight:600;margin-bottom:5px}
+.cap span{font-size:12.5px;color:var(--t3);line-height:1.7}
+
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.nav .t{font-size:17px;font-weight:600}
+.ico{width:32px;height:32px;border-radius:11px;background:var(--panel);border:1px solid var(--stroke);
+  display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:13px}
+.glass{background:var(--panel);border:1px solid var(--stroke);border-radius:20px}
+.lab{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--t3);font-weight:700}
+.mono{font-family:"SF Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:18px;
+  font-size:15.5px;font-weight:700;color:#00121F;background:linear-gradient(100deg,var(--cyan),var(--blue) 70%,var(--purple));
+  box-shadow:0 12px 30px -12px rgba(52,229,255,.6)}
+.cta.gold{background:linear-gradient(100deg,#FFD98A,var(--amber) 60%,#FF8A3D);color:#2B1500;
+  box-shadow:0 12px 34px -12px rgba(255,176,32,.7)}
+.cta.ghost{background:var(--panel);border:1px solid var(--stroke);color:var(--t1);box-shadow:none}
+
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:999px}
+.pill.new{background:rgba(255,176,32,.18);color:var(--amber);border:1px solid rgba(255,176,32,.45)}
+.pill.live{background:rgba(255,61,154,.16);color:var(--deceitT);border:1px solid rgba(255,61,154,.4)}
+.pill.ok{background:rgba(41,242,160,.14);color:var(--truthT);border:1px solid rgba(41,242,160,.35)}
+
+/* mode card */
+.mcard{padding:15px;margin-bottom:11px;display:flex;gap:13px;align-items:center}
+.mcard .ic{width:46px;height:46px;border-radius:16px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:20px}
+.ic.gokon{background:linear-gradient(150deg,rgba(255,176,32,.30),rgba(255,61,154,.16));border:1px solid rgba(255,176,32,.45)}
+.ic.solo{background:linear-gradient(150deg,rgba(52,229,255,.25),rgba(46,123,255,.12));border:1px solid rgba(52,229,255,.35)}
+.ic.duo{background:linear-gradient(150deg,rgba(255,61,154,.25),rgba(123,77,255,.14));border:1px solid rgba(255,61,154,.35)}
+.mcard h4{font-size:15px;font-weight:600;display:flex;align-items:center;gap:7px}
+.mcard p{font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:2px}
+.mcard.hot{border-color:rgba(255,176,32,.5);background:rgba(255,176,32,.07);
+  box-shadow:0 0 0 1px rgba(255,176,32,.2),0 14px 40px -20px rgba(255,176,32,.8)}
+
+/* member setup */
+.chips{display:flex;gap:7px;margin:9px 0 16px}
+.chip{flex:1;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;background:var(--panel);border:1px solid var(--stroke);color:var(--t2)}
+.chip.on{background:linear-gradient(100deg,var(--cyan),var(--blue));color:#00121F;border-color:transparent}
+.mrow{display:flex;align-items:center;gap:11px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.mrow:last-child{border-bottom:0}
+.av{width:32px;height:32px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:700;flex:0 0 auto}
+.mrow input{background:none;border:0;color:var(--t1);font-size:14px;font-family:inherit;width:100%}
+.mrow .num{font-size:11px;color:var(--t3);font-family:"SF Mono",monospace}
+
+/* turn screen */
+.turnbig{text-align:center;padding:22px 0 6px}
+.turnbig .lab2{font-size:11px;letter-spacing:.2em;color:var(--amber);font-weight:700;text-transform:uppercase}
+.turnbig .name{font-size:34px;font-weight:800;letter-spacing:-.03em;margin-top:8px}
+.turnbig .sub{font-size:12px;color:var(--t3);margin-top:4px}
+.deck{display:flex;gap:6px;margin:16px 0 12px}
+.deck div{flex:1;text-align:center;font-size:10.5px;font-weight:700;padding:7px 0;border-radius:10px;
+  background:var(--panel);border:1px solid var(--stroke);color:var(--t3)}
+.deck div.on{background:rgba(255,61,154,.18);border-color:rgba(255,61,154,.45);color:var(--deceitT)}
+.qcard{padding:22px 18px;text-align:center;position:relative;overflow:hidden}
+.qcard .q{font-size:19px;font-weight:700;line-height:1.55;letter-spacing:-.01em}
+.qcard .meta{font-size:10.5px;color:var(--t3);margin-top:12px;font-family:"SF Mono",monospace}
+.shuffle{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--cyan);margin-top:12px;font-weight:600}
+
+/* progress list */
+.plist{padding:4px 14px}
+.prow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.prow:last-child{border-bottom:0}
+.prow .nm{font-size:13px;font-weight:600;flex:1}
+.prow .sc{font-size:15px;font-weight:800;letter-spacing:-.02em;font-family:"SF Mono",monospace}
+.prow.wait .nm,.prow.wait .sc{color:var(--t3);font-weight:500}
+
+/* ranking */
+.crown{text-align:center;padding:6px 0 0}
+.rank1{text-align:center;margin-top:2px}
+.rank1 .ttl{font-size:11px;letter-spacing:.2em;color:var(--amber);font-weight:700}
+.rank1 .nm{font-size:30px;font-weight:800;letter-spacing:-.03em;color:var(--deceitT);margin-top:4px}
+.rank1 .sc{font-size:12px;color:var(--t3);margin-top:2px;font-family:"SF Mono",monospace}
+.rrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.rrow:last-child{border-bottom:0}
+.rk{width:20px;text-align:center;font-size:12px;font-weight:800;color:var(--t3);font-family:"SF Mono",monospace}
+.rrow .nm{font-size:13px;font-weight:600;flex:1}
+.bar{height:5px;border-radius:999px;background:rgba(255,255,255,.1);width:74px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px}
+.rrow .sc{font-size:13px;font-weight:700;width:26px;text-align:right;font-family:"SF Mono",monospace}
+
+/* roulette */
+.wheel{position:relative;width:200px;height:200px;margin:10px auto 0}
+.wheel svg{transform:rotate(-8deg)}
+.needle{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;
+  border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid var(--amber)}
+.penalty{text-align:center;margin-top:16px}
+.penalty .lab2{font-size:10.5px;letter-spacing:.18em;color:var(--t3);font-weight:700}
+.penalty .txt{font-size:20px;font-weight:800;margin-top:6px;color:var(--amber);letter-spacing:-.01em}
+
+/* paywall */
+.pw{text-align:center;padding-top:6px}
+.pw h3{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-top:14px;line-height:1.4}
+.pw .sub{font-size:12.5px;color:var(--t2);margin-top:9px;line-height:1.7}
+.feat{display:flex;align-items:flex-start;gap:10px;padding:9px 0}
+.feat .fi{width:24px;flex:0 0 auto;color:var(--amber);font-size:13px;text-align:center;padding-top:1px}
+.feat b{font-size:13px;font-weight:600;display:block}
+.feat span{font-size:11.5px;color:var(--t3);line-height:1.5}
+.price{font-size:12px;color:var(--t3);margin-top:10px}
+.restore{font-size:11.5px;color:var(--t3);text-align:center;margin-top:10px;text-decoration:underline}
+
+.flow{background:rgba(255,255,255,.04);border:1px solid var(--stroke);border-radius:20px;padding:22px 24px;margin-top:26px}
+.flow h4{font-size:14px;color:var(--amber);margin-bottom:14px;font-weight:700}
+ul.pts{list-style:none}
+ul.pts li{font-size:13.5px;color:var(--t2);line-height:1.85;padding-left:18px;position:relative;margin-bottom:5px}
+ul.pts li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:6px;border-radius:50%;background:var(--amber)}
+ul.pts li b{color:var(--t1);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="eyebrow">In-App Purchase ・ ¥500</div>
+<h1>合コンモード</h1>
+<p class="lead">個人の判定を <b>グループの1ゲーム</b> に引き上げます。全員が順番にスキャンし、最後にランキングで「今夜いちばんの嘘つき」が発表される。<b>終わりがある</b>ので全員が最後まで見届けます。</p>
+
+<!-- =============== 前半 =============== -->
+<div class="sec"><span class="n">01</span><h2>ゲームの流れ</h2><span class="d">入口 → 準備 → 出番 → 途中経過</span></div>
+<p class="note">進行役がスマホを持ち、回していくだけ。<b>質問を考える必要がありません</b>。いま一番の摩擦だった「次なに聞く？」で場が止まる問題を、お題デッキが埋めます。</p>
+
+<div class="grid">
+
+  <!-- A. モード選択 -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:38</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div style="text-align:center;margin:10px 0 20px">
+        <div style="width:74px;height:74px;border-radius:50%;margin:0 auto 12px;
+          background:radial-gradient(circle at 35% 30%,#9BF3FF,#2E7BFF 55%,#7B4DFF);
+          box-shadow:0 0 40px rgba(52,229,255,.55)"></div>
+        <div style="font-size:21px;font-weight:700">TruthPulse</div>
+        <div class="lab" style="margin-top:5px">Bio-Signal Analyzer</div>
+      </div>
+
+      <div class="glass mcard hot">
+        <div class="ic gokon">􀉬</div>
+        <div>
+          <h4>合コンモード <span class="pill new">NEW</span></h4>
+          <p>全員で回して、いちばんの嘘つきを決める</p>
+        </div>
+        <div style="margin-left:auto;color:var(--amber);font-size:15px">›</div>
+      </div>
+
+      <div class="glass mcard">
+        <div class="ic solo">􀉩</div>
+        <div><h4>ソロ・スキャン</h4><p>1人で計測</p></div>
+        <div style="margin-left:auto;color:var(--t3);font-size:15px">›</div>
+      </div>
+
+      <div class="glass mcard">
+        <div class="ic duo">􀉫</div>
+        <div><h4>デュオ・スキャン</h4><p>2人で顔を寄せて計測</p></div>
+        <div style="margin-left:auto;color:var(--t3);font-size:15px">›</div>
+      </div>
+
+      <div style="margin-top:18px"><div class="cta gold">􀝊 &nbsp;合コンモードを始める</div></div>
+      <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:10px">
+        3人まで・1回だけ無料でお試しできます
+      </div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>A ・ 入口</b><span>既存の2モードの上に置きます。無料で1回通しで遊べることを最初に明示し、課金の壁は後ろに置きます。</span></div>
+  </div>
+
+  <!-- B. メンバー設定 -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:39</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div class="nav"><div class="ico">􀆉</div><div class="t">メンバー</div><div style="width:32px"></div></div>
+
+      <div class="lab">人数</div>
+      <div class="chips">
+        <div class="chip">2</div><div class="chip on">4</div><div class="chip">6</div>
+        <div class="chip">8</div><div class="chip">＋</div>
+      </div>
+
+      <div class="glass" style="padding:4px 4px">
+        <div class="mrow">
+          <div class="av" style="background:rgba(52,229,255,.18);color:#9BF3FF">1</div>
+          <input value="ユウキ" readonly>
+          <div class="num">未計測</div>
+        </div>
+        <div class="mrow">
+          <div class="av" style="background:rgba(255,61,154,.18);color:var(--deceitT)">2</div>
+          <input value="ミク" readonly>
+          <div class="num">未計測</div>
+        </div>
+        <div class="mrow">
+          <div class="av" style="background:rgba(41,242,160,.16);color:var(--truthT)">3</div>
+          <input value="ケンタ" readonly>
+          <div class="num">未計測</div>
+        </div>
+        <div class="mrow">
+          <div class="av" style="background:rgba(123,77,255,.20);color:#B9A6FF">4</div>
+          <input value="アオイ" readonly>
+          <div class="num">未計測</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-top:14px;padding:11px 13px" class="glass">
+        <div style="color:var(--cyan);font-size:13px">􀄪</div>
+        <div style="font-size:12.5px;font-weight:600;flex:1">順番をシャッフル</div>
+        <div style="width:38px;height:22px;border-radius:999px;background:linear-gradient(100deg,var(--cyan),var(--blue));position:relative">
+          <div style="position:absolute;right:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px"><div class="cta">􀊄 &nbsp;スタート</div></div>
+      <div style="text-align:center;font-size:11px;color:var(--t3);margin-top:9px">名前は空欄でも「1人目」で進みます</div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>B ・ 準備</b><span>名前入力は任意。人数チップを押すだけで始められます。ここで手間をかけさせると場が冷えるので、最短2タップで抜けられる設計です。</span></div>
+  </div>
+
+  <!-- C. 出番 + お題 -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:41</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div class="nav">
+        <div class="ico">􀆉</div>
+        <div class="t mono" style="font-size:13px;color:var(--t3)">2 / 4 人目</div>
+        <div class="pill live"><span>●</span>進行中</div>
+      </div>
+
+      <div class="turnbig">
+        <div class="lab2">次の出番</div>
+        <div class="name">ミク</div>
+        <div class="sub">スマホを渡してください</div>
+      </div>
+
+      <div class="deck">
+        <div>探り合い</div><div class="on">恋愛</div><div>ドロドロ</div><div>暴露</div>
+      </div>
+
+      <div class="glass qcard">
+        <div class="q">この中に<br>タイプの人がいる</div>
+        <div class="meta">恋愛デッキ ・ 12 / 30</div>
+      </div>
+      <div class="shuffle">􀄲 &nbsp;別のお題にする</div>
+
+      <div style="margin-top:16px"><div class="cta">􀊄 &nbsp;ミクさんを計測する</div></div>
+      <div style="margin-top:9px"><div class="cta ghost" style="height:42px;font-size:13px">自分で質問を入力</div></div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>C ・ 出番とお題</b><span>誰の番か、何を聞くかが一画面で決まります。「別のお題にする」で引き直せるので、その場に合わない質問で止まりません。</span></div>
+  </div>
+
+  <!-- D. 途中経過 -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:43</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div class="nav"><div class="ico">􀆉</div><div class="t">判定</div><div class="pill ok">2 / 4</div></div>
+
+      <div class="glass" style="padding:20px 16px;text-align:center">
+        <svg width="150" height="76" viewBox="0 0 200 100" style="margin-bottom:2px">
+          <circle cx="60" cy="50" r="34" fill="#2A0F33" stroke="#FF3D9A" stroke-width="2"/>
+          <path d="M40 26 L34 12 L50 22 Z" fill="#FF3D9A"/><path d="M80 26 L86 12 L70 22 Z" fill="#FF3D9A"/>
+          <ellipse cx="48" cy="42" rx="8" ry="10" fill="#fff"/><ellipse cx="72" cy="42" rx="8" ry="10" fill="#fff"/>
+          <circle cx="49" cy="44" r="4" fill="#1B1436"/><circle cx="73" cy="44" r="4" fill="#1B1436"/>
+          <path d="M60 58 L152 64" stroke="#FFB020" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="152" cy="64" r="5.5" fill="#FFB020"/>
+          <path d="M48 74 Q60 66 72 74" fill="none" stroke="#FF8FC2" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+        <div style="font-size:24px;font-weight:800;color:var(--deceitT);letter-spacing:-.02em;line-height:1.35">嘘を<br>ついています</div>
+        <div style="font-size:12.5px;color:var(--t2);margin-top:9px">「この中にタイプの人がいる」</div>
+        <div style="margin-top:12px"><span class="mono" style="font-size:32px;font-weight:800">28</span><span style="font-size:12px;color:var(--t3)"> ／100</span></div>
+      </div>
+
+      <div class="lab" style="margin:16px 0 6px">現在の順位</div>
+      <div class="glass plist">
+        <div class="prow"><div class="rk">1</div><div class="nm">ミク</div><div class="sc" style="color:var(--deceitT)">28</div></div>
+        <div class="prow"><div class="rk">2</div><div class="nm">ユウキ</div><div class="sc" style="color:var(--amber)">61</div></div>
+        <div class="prow wait"><div class="rk">–</div><div class="nm">ケンタ</div><div class="sc">未</div></div>
+        <div class="prow wait"><div class="rk">–</div><div class="nm">アオイ</div><div class="sc">未</div></div>
+      </div>
+
+      <div style="margin-top:14px"><div class="cta">􀆊 &nbsp;次はケンタさん</div></div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>D ・ 途中経過</b><span>個別の結果の下に順位を出します。<b>まだ計測していない人が焦る</b>のがこの画面の役割です。次の人へのボタンで淀みなく回ります。</span></div>
+  </div>
+
+</div>
+
+<!-- =============== 後半 =============== -->
+<div class="sec"><span class="n">02</span><h2>クライマックス</h2><span class="d">ランキング → 罰ゲーム → 課金</span></div>
+<p class="note">全員が終わると発表です。ここが一番の山場なので、<b>順位は下位から1人ずつ開示</b>し、最後に1位（＝いちばんの嘘つき）を出します。</p>
+
+<div class="grid">
+
+  <!-- E. ランキング -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:52</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div class="nav"><div class="ico">􀆄</div><div class="t">結果発表</div><div class="ico">􀈂</div></div>
+
+      <div class="crown" style="font-size:22px">👑</div>
+      <div style="text-align:center;margin-top:2px">
+        <svg width="190" height="96" viewBox="0 0 230 110">
+          <circle cx="58" cy="55" r="38" fill="#2A0F33" stroke="#FF3D9A" stroke-width="2.5"/>
+          <path d="M36 28 L29 11 L48 23 Z" fill="#FF3D9A"/><path d="M80 28 L87 11 L68 23 Z" fill="#FF3D9A"/>
+          <ellipse cx="45" cy="46" rx="9" ry="11.5" fill="#fff"/><ellipse cx="71" cy="46" rx="9" ry="11.5" fill="#fff"/>
+          <circle cx="46" cy="48" r="4.5" fill="#1B1436"/><circle cx="72" cy="48" r="4.5" fill="#1B1436"/>
+          <path d="M58 64 L214 72" stroke="#FFB020" stroke-width="11" stroke-linecap="round"/>
+          <circle cx="214" cy="72" r="6.5" fill="#FFB020"/>
+          <path d="M45 82 Q58 73 71 82" fill="none" stroke="#FF8FC2" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="rank1">
+        <div class="ttl">今夜いちばんの嘘つき</div>
+        <div class="nm">ミク</div>
+        <div class="sc">平均 28点 ・ 3問中3問が「嘘」</div>
+      </div>
+
+      <div class="glass" style="padding:6px 14px;margin-top:16px">
+        <div class="rrow">
+          <div class="rk" style="color:var(--deceitT)">1</div><div class="nm">ミク</div>
+          <div class="bar"><i style="width:88%;background:linear-gradient(90deg,#FF3D9A,#FF8FC2)"></i></div>
+          <div class="sc" style="color:var(--deceitT)">28</div>
+        </div>
+        <div class="rrow">
+          <div class="rk">2</div><div class="nm">ケンタ</div>
+          <div class="bar"><i style="width:62%;background:linear-gradient(90deg,#FFB020,#FFD98A)"></i></div>
+          <div class="sc" style="color:var(--amber)">44</div>
+        </div>
+        <div class="rrow">
+          <div class="rk">3</div><div class="nm">ユウキ</div>
+          <div class="bar"><i style="width:38%;background:linear-gradient(90deg,#2E7BFF,#34E5FF)"></i></div>
+          <div class="sc" style="color:var(--cyan)">61</div>
+        </div>
+        <div class="rrow">
+          <div class="rk">4</div><div class="nm">アオイ</div>
+          <div class="bar"><i style="width:14%;background:linear-gradient(90deg,#29F2A0,#7CFFCB)"></i></div>
+          <div class="sc" style="color:var(--truthT)">83</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:9px;margin-top:15px">
+        <div class="cta ghost" style="flex:1;font-size:13.5px">􀈂 シェア</div>
+        <div class="cta gold" style="flex:1.3;font-size:14px">􀝊 罰ゲーム</div>
+      </div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>E ・ ランキング発表</b><span>ウソミの鼻の長さが1位の点数に連動します。この画面のシェア画像が、そのままアプリの宣伝になります。</span></div>
+  </div>
+
+  <!-- F. 罰ゲーム -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>21:53</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div class="nav"><div class="ico">􀆉</div><div class="t">罰ゲーム</div><div style="width:32px"></div></div>
+
+      <div style="text-align:center;margin-top:4px">
+        <span class="pill live" style="font-size:11px">ミク さんが回します</span>
+      </div>
+
+      <div class="wheel">
+        <div class="needle"></div>
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <g transform="translate(100,100)">
+            <path d="M0 0 L0 -92 A92 92 0 0 1 65 -65 Z" fill="rgba(255,61,154,.35)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L65 -65 A92 92 0 0 1 92 0 Z" fill="rgba(255,176,32,.35)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L92 0 A92 92 0 0 1 65 65 Z" fill="rgba(52,229,255,.30)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L65 65 A92 92 0 0 1 0 92 Z" fill="rgba(123,77,255,.35)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L0 92 A92 92 0 0 1 -65 65 Z" fill="rgba(41,242,160,.28)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L-65 65 A92 92 0 0 1 -92 0 Z" fill="rgba(255,61,154,.22)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L-92 0 A92 92 0 0 1 -65 -65 Z" fill="rgba(255,176,32,.22)" stroke="rgba(255,255,255,.14)"/>
+            <path d="M0 0 L-65 -65 A92 92 0 0 1 0 -92 Z" fill="rgba(52,229,255,.20)" stroke="rgba(255,255,255,.14)"/>
+            <circle r="30" fill="#0A0D1E" stroke="rgba(255,176,32,.5)" stroke-width="2"/>
+            <text y="6" text-anchor="middle" fill="#FFB020" font-size="15" font-weight="700">回す</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="penalty">
+        <div class="lab2">出た罰ゲーム</div>
+        <div class="txt">隣の人の<br>いいところを3つ言う</div>
+      </div>
+
+      <div style="margin-top:18px"><div class="cta gold">􀄲 &nbsp;もう一回まわす</div></div>
+      <div style="margin-top:9px"><div class="cta ghost" style="height:42px;font-size:13px">終わる</div></div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>F ・ 罰ゲームルーレット</b><span>判定に「結果」が生まれるので真剣に見ます。<b>一気飲み系は入れません</b>——実害があるうえ、年齢制限が4+から17+に上がります。</span></div>
+  </div>
+
+  <!-- G. ペイウォール -->
+  <div class="dev"><div class="frame"><div class="screen">
+    <div class="notch"></div>
+    <div class="status"><span>22:06</span><span>▮▮▮ ⌁ 􀛨</span></div>
+    <div class="body">
+      <div style="display:flex;justify-content:flex-end"><div class="ico">􀆄</div></div>
+
+      <div class="pw">
+        <svg width="160" height="82" viewBox="0 0 200 100" style="margin-top:4px">
+          <circle cx="58" cy="50" r="33" fill="#2A0F33" stroke="#FFB020" stroke-width="2"/>
+          <path d="M38 26 L32 12 L48 22 Z" fill="#FFB020"/><path d="M78 26 L84 12 L68 22 Z" fill="#FFB020"/>
+          <ellipse cx="47" cy="42" rx="8" ry="10" fill="#fff"/><ellipse cx="70" cy="42" rx="8" ry="10" fill="#fff"/>
+          <circle cx="48" cy="44" r="4" fill="#1B1436"/><circle cx="71" cy="44" r="4" fill="#1B1436"/>
+          <path d="M58 58 L150 64" stroke="#FFB020" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="150" cy="64" r="5.5" fill="#FFB020"/>
+          <path d="M46 73 Q58 81 70 73" fill="none" stroke="#FFD98A" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
+
+        <h3>まだまだ<br>やりますよね？</h3>
+        <div class="sub">お試しの1回が終わりました。<br>合コンモードを解放すると、この続きが遊べます。</div>
+      </div>
+
+      <div class="glass" style="padding:10px 14px;margin-top:16px">
+        <div class="feat"><div class="fi">􀉬</div><div><b>人数無制限・何度でも</b><span>2次会でも、来週でも</span></div></div>
+        <div class="feat"><div class="fi">􀉞</div><div><b>お題 120問・4デッキ</b><span>探り合い / 恋愛 / ドロドロ / 暴露</span></div></div>
+        <div class="feat"><div class="fi">􀝊</div><div><b>罰ゲームルーレット</b><span>20種類</span></div></div>
+        <div class="feat"><div class="fi">􀉼</div><div><b>仕込みモード</b><span>進行役だけが結果を操れる</span></div></div>
+      </div>
+
+      <div style="margin-top:16px"><div class="cta gold">¥500 で解放する</div></div>
+      <div class="price">買い切り・追加課金なし</div>
+      <div class="restore">購入を復元</div>
+    </div>
+    <div class="homebar"></div>
+  </div></div>
+  <div class="cap"><b>G ・ 課金導線</b><span><b>1回通しで遊んだ直後</b>に出します。全員が盛り上がっている最中で、次を始めようとした瞬間。起動直後には絶対に出しません。</span></div>
+  </div>
+
+</div>
+
+<div class="flow">
+  <h4>この設計で意図していること</h4>
+  <ul class="pts">
+    <li><b>無料で1回、最後まで遊べる</b>。ランキング発表まで体験してもらわないと、¥500の価値が伝わりません</li>
+    <li><b>課金は2回目の入口に置く</b>。起動直後に出すとシェアも口コミも死にます</li>
+    <li><b>進行役の手数を最小に</b>。人数を選ぶ2タップで開始でき、名前入力は任意。合コンの場で操作に時間をかけさせない</li>
+    <li><b>お題が場を止めない</b>。「別のお題にする」で即引き直せます</li>
+    <li><b>終わりがある</b>。ランキング発表があることで、全員が最後まで付き合う理由が生まれます</li>
+  </ul>
+</div>
+
+</div>
+</body>
+</html>

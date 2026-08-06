@@ -15,6 +15,7 @@ struct ModeCard: View {
 
         static let solo = Palette(start: TPColor.cyan, end: TPColor.electric)
         static let duo = Palette(start: TPColor.deceit, end: TPColor.purple)
+        static let pair = Palette(start: TPColor.truth, end: TPColor.cyan)
         static let neutral = Palette(start: .white, end: .white)
     }
 

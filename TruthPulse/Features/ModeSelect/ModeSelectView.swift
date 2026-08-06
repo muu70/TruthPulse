@@ -13,6 +13,7 @@ import SwiftData
 enum TPRoute: Hashable {
     case soloSession
     case duoSession
+    case pairSession
     case history
 }
 
@@ -48,7 +49,7 @@ struct ModeSelectView: View {
                     modeCards
 
                     TPButton(title: startButtonTitle, systemImage: startButtonIcon) {
-                        path.append(selectedMode == .solo ? .soloSession : .duoSession)
+                        path.append(route(for: selectedMode))
                     }
                     .padding(.top, 22)
                 }
@@ -120,6 +121,16 @@ struct ModeSelectView: View {
             }
 
             ModeCard(
+                icon: "hand.point.up.left.fill",
+                title: ScanMode.pair.displayName,
+                subtitle: "2人で指を近づけて計測します",
+                palette: .pair,
+                isSelected: selectedMode == .pair
+            ) {
+                selectedMode = .pair
+            }
+
+            ModeCard(
                 icon: "list.bullet.rectangle",
                 title: "セッション履歴",
                 subtitle: historySubtitle,
@@ -132,12 +143,28 @@ struct ModeSelectView: View {
         .animation(reduceMotion ? nil : .snappy(duration: 0.25), value: selectedMode)
     }
 
+    private func route(for mode: ScanMode) -> TPRoute {
+        switch mode {
+        case .solo: .soloSession
+        case .duo: .duoSession
+        case .pair: .pairSession
+        }
+    }
+
     private var startButtonTitle: String {
-        selectedMode == .solo ? "スキャンを開始" : "2人でスキャン"
+        switch selectedMode {
+        case .solo: "スキャンを開始"
+        case .duo: "2人でスキャン"
+        case .pair: "2人で指を合わせる"
+        }
     }
 
     private var startButtonIcon: String {
-        selectedMode == .solo ? "play.fill" : "camera.fill"
+        switch selectedMode {
+        case .solo: "play.fill"
+        case .duo: "camera.fill"
+        case .pair: "hand.point.up.left.fill"
+        }
     }
 
     private var historySubtitle: String {

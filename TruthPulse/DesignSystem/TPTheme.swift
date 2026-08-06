@@ -131,6 +131,8 @@ enum TPMetrics {
     static let samplingDuration: TimeInterval = 8.0
     /// 計測時間（デュオ）。顔を寄せ続けるのは疲れるので短め。
     static let duoSamplingDuration: TimeInterval = 6.0
+    /// 計測時間（ペア）。指を近づけたまま耐える時間。
+    static let pairSamplingDuration: TimeInterval = 8.0
     /// 生体データの更新レート
     static let sampleInterval: Duration = .milliseconds(50)
 }

@@ -79,7 +79,16 @@ ViewModifier に切り出しても中身が同じなら意味がありません�
 向きの解釈は **Vision の `CGImagePropertyOrientation` (`.leftMirrored`) に一本化**しています。
 その空間ではバッファの幅と高さが入れ替わるので、`bufferSize` も入れ替えて渡します。
 
-### 5. プレビューで Reduce Motion は注入できない
+### 5. SwiftUI のジェスチャでは複数の指を同時に取れない
+
+`DragGesture` は同時に 1 本だけです。ペア判定は 2 点の距離を測るので、
+`MultiTouchPad`（UIViewRepresentable + `touchesBegan/Moved/Ended`）を使っています。
+`isMultipleTouchEnabled = true` を忘れると 1 本しか来ません。
+
+画面幅の都合で、**同時に置けるのは実用上 4 本まで**です
+（指 1 本に 90pt 前後の余裕が要る）。
+
+### 6. プレビューで Reduce Motion は注入できない
 
 `accessibilityReduceMotion` は読み取り専用 KeyPath なので
 `.environment(_:_:)` に渡せません（`dynamicTypeSize` と `colorScheme` は可）。
@@ -106,6 +115,7 @@ TruthPulse/
     ├── ModeSelect/          エントリー画面
     ├── SoloSession/         指を置いて 8 秒計測 + BioSignalEngine
     ├── DuoSession/          顔認識で 6 秒計測（Vision + AVFoundation）
+    ├── PairSession/         2 人が指を近づけて 8 秒計測（マルチタッチ）
     ├── Result/              判定結果 + シェアカード（ImageRenderer）
     └── History/             履歴リスト（ダッシュボードの暫定版）
 ```
@@ -116,7 +126,8 @@ TruthPulse/
 RootView (NavigationStack, path: [TPRoute])
 └── ModeSelectView
     ├── .soloSession → SoloSessionView ─┐
-    ├── .duoSession  → DuoSessionView  ─┼→ fullScreenCover → ResultView
+    ├── .duoSession  → DuoSessionView  ─┤
+    ├── .pairSession → PairSessionView ─┼→ fullScreenCover → ResultView
     └── .history     → SessionHistoryView ┘（onRetry なしで開く）
 ```
 
@@ -142,6 +153,9 @@ RootView (NavigationStack, path: [TPRoute])
 |---|---|---|
 | ソロの計測時間 | `TPTheme.swift` `samplingDuration` | 8.0 秒 |
 | デュオの計測時間 | `TPTheme.swift` `duoSamplingDuration` | 6.0 秒 |
+| ペアの計測時間 | `TPTheme.swift` `pairSamplingDuration` | 8.0 秒 |
+| 触れ合ったとみなす距離 | `PairSessionViewModel.swift` `contactDistance` | 46pt |
+| 同期率 0% になる距離 | 同 `maxDistanceRatio`（パッド幅比） | 0.72 |
 | 顔を近づける閾値 | `DuoSessionViewModel.swift` `lockThreshold` | 0.72 |
 | 継続に必要な同期率 | 同 `releaseThreshold` | 0.52 |
 | 心拍の触覚の強さ | `TPHaptics.swift` `intensity` | 0.55 |

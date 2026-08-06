@@ -29,6 +29,8 @@ struct RootView: View {
                         SoloSessionView()
                     case .duoSession:
                         DuoSessionView()
+                    case .pairSession:
+                        PairSessionView()
                     case .history:
                         SessionHistoryView()
                     }

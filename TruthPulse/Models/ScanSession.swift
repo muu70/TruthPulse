@@ -12,12 +12,13 @@ import SwiftUI
 // MARK: - Enums
 
 enum ScanMode: String, Codable, CaseIterable, Sendable {
-    case solo, duo
+    case solo, duo, pair
 
     var displayName: String {
         switch self {
         case .solo: "ソロ・スキャン"
         case .duo: "デュオ・スキャン"
+        case .pair: "ペア・スキャン"
         }
     }
 }
