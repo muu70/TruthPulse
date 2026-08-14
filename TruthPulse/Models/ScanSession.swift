@@ -174,6 +174,12 @@ final class ScanSession {
     var confidence: Int = 0
     var duration: TimeInterval = 0
     var factorsData: Data?
+    /// 合コンモードで、同じ回のプレイをまとめる ID。ソロ等の単発計測では nil。
+    var groupID: UUID?
+    /// 合コンモード内での出番の順番（0 始まり）。
+    var playerIndex: Int = 0
+    /// 合コンモードでのプレイヤー名。空欄可（「プレイヤーN」等のフォールバックは呼び出し側で解決）。
+    var playerName: String = ""
 
     @Relationship(deleteRule: .cascade, inverse: \BioSample.session)
     var samples: [BioSample] = []
@@ -184,7 +190,10 @@ final class ScanSession {
         honestyScore: Int,
         confidence: Int,
         duration: TimeInterval,
-        factors: [AnalysisFactor]
+        factors: [AnalysisFactor],
+        groupID: UUID? = nil,
+        playerIndex: Int = 0,
+        playerName: String = ""
     ) {
         self.id = UUID()
         self.startedAt = .now
@@ -195,6 +204,9 @@ final class ScanSession {
         self.confidence = confidence
         self.duration = duration
         self.factorsData = try? JSONEncoder().encode(factors)
+        self.groupID = groupID
+        self.playerIndex = playerIndex
+        self.playerName = playerName
     }
 
     var mode: ScanMode { ScanMode(rawValue: modeRaw) ?? .solo }

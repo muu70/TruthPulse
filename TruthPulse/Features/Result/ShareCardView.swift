@@ -171,7 +171,8 @@ struct ShareCardView: View {
 // MARK: - Shapes
 
 /// 背景のデータグリッド。Canvas は ImageRenderer で扱いづらいため Shape で描く。
-private struct GridPattern: Shape {
+/// 合コンモードのランキングカード（RankingShareCardView）とも共有する。
+struct GridPattern: Shape {
     let spacing: CGFloat
 
     func path(in rect: CGRect) -> Path {

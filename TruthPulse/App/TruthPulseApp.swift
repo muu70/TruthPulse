@@ -31,6 +31,8 @@ struct RootView: View {
                         DuoSessionView()
                     case .pairSession:
                         PairSessionView()
+                    case .gokonMode:
+                        GokonSessionView()
                     case .history:
                         SessionHistoryView()
                     }

@@ -14,6 +14,7 @@ enum TPRoute: Hashable {
     case soloSession
     case duoSession
     case pairSession
+    case gokonMode
     case history
 }
 
@@ -128,6 +129,15 @@ struct ModeSelectView: View {
                 isSelected: selectedMode == .pair
             ) {
                 selectedMode = .pair
+            }
+
+            ModeCard(
+                icon: "person.3.fill",
+                title: "合コンモード",
+                subtitle: "2〜8人で順番に計測。今夜いちばんの嘘つきを発表",
+                palette: .gokon
+            ) {
+                path.append(.gokonMode)
             }
 
             ModeCard(
